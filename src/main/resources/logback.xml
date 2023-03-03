@@ -1,0 +1,21 @@
+<configuration debug="false" scan="true">
+
+	<conversionRule conversionWord="color" converterClass="com.gcs.utils.logging.LogbackColorConsole" />
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern>%d{yyyy-dd-MM@HH:mm:ss:SSS} %color([%-5level]) - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+
+	<logger name="org.apache.activemq" level="info" />
+	<logger name="org.jooq" level="info" />
+	<logger name="org.eclipse.jetty" level="info" />
+	<logger name="org.apache.commons.beanutils.FluentPropertyBeanIntrospector" level="warn" />
+	<logger name="org.apache.commons" level="info" />
+	
+	<root level="trace">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
