@@ -7,7 +7,7 @@
 
 
 
-package gcs.toolset.throttle;
+package com.gcs.tools.latency.throttle;
 
 
 
