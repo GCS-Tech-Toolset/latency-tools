@@ -10,10 +10,18 @@ package com.gcs.tools.latency.recorders;
 
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 
 
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
+
+
+import com.gcs.config.ConfigUtils;
+import com.gcs.config.IProps;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 
@@ -31,13 +39,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 @RequiredArgsConstructor
-public final class LatencyRecorderProperties
+public final class LatencyRecorderProperties implements IProps
 {
 	public static final String	PROCESSOR_CORE_ID	= "ThreadControl.ProcessingCoreId";
 	public static final String	WRITER_CORE_ID		= "ThreadControl.WriterCoreId";
 
 	public static final String	CAPACITY		= "Procesor.Capacity";
-	public static final String	SINGLE_WRITER	= "Type.RumiRecorder.SingleWriter";
+	public static final String	SINGLE_WRITER	= "Type.Recorder.SingleWriter";
 	public static final String	SIMPLE_RECORDER	= "Type.SimpleRecorder";
 
 	public static final String	BUFFER_COUNT	= "Writer.BufferCount";
@@ -125,31 +133,29 @@ public final class LatencyRecorderProperties
 
 
 	@Override
-	public String toString()
+	public void loadFromXml(@NonNull XMLConfiguration cfg_) throws ConfigurationException
 	{
-		return getAsProps().toString();
+
 	}
 
 
 
 
 
-	public void toTraceLog()
+	@Override
+	public Map<String, String> toMap()
 	{
-		if (!_logger.isTraceEnabled())
-		{
-			return;
-		}
+		return null;
+	}
 
-		StringBuilder buff = new StringBuilder();
-		Properties props = getAsProps();
-		Iterator<Object> itr = props.keySet().iterator();
-		Object key;
-		while (itr.hasNext())
-		{
-			key = itr.next();
-			_logger.trace("{}={}", key, props.get(key));
-		}
+
+
+
+
+	@Override
+	public String toString()
+	{
+		return getAsProps().toString();
 	}
 
 

@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 
 
+import com.gcs.config.ConfigUtils;
 import com.gcs.tools.latency.recorders.ILatencyRecorder;
 import com.gcs.tools.latency.recorders.LatencyRecorderProperties;
 import com.lmax.disruptor.EventHandler;
@@ -73,7 +74,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 	public StandardLatencyRecorder(LatencyRecorderProperties props_)
 	{
 		_props = props_;
-		_props.toTraceLog();
+		ConfigUtils.logToTrace(_props);
 
 		int buffSz = _props.getCapacity();
 		if (_logger.isDebugEnabled())
@@ -185,7 +186,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 	@Override
 	public String toString()
 	{
-		return "RumiLatencyRecorder";
+		return "StandardLatencyRecorder";
 	}
 
 

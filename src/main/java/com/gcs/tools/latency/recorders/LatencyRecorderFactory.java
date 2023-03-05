@@ -157,7 +157,7 @@ public class LatencyRecorderFactory
 			props.setCapacity(Integer.getInteger(props.getKeyFqn(LatencyRecorderProperties.CAPACITY), 512));
 			props.setCntBuffers(Integer.getInteger(props.getKeyFqn(LatencyRecorderProperties.BUFFER_COUNT), 512));
 		}
-		else if (expectedMps_ >= 100_0000 && expectedMps_ <= 1_000_000)
+		else if (expectedMps_ >= 100_000 && expectedMps_ <= 1_000_000)
 		{
 			props.setWaitStrategy(new YieldingWaitStrategy());
 			props.setCapacity(Integer.getInteger(props.getKeyFqn(LatencyRecorderProperties.CAPACITY), 1024));

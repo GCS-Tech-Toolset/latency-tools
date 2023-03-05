@@ -1,28 +1,3 @@
-/**
- * Copyright 2016 Neeve Research, LLC
- *
- * This product includes software developed at Neeve Research, LLC
- * (http://www.neeveresearch.com/) as well as software licenced to
- * Neeve Research, LLC under one or more contributor license agreements.
- * See the NOTICE file distributed with this work for additional information
- * regarding copyright ownership.
- *
- * Neeve Research licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at:
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/****************************************************************************
- * FILE: LatencyBuffer.java
- * DSCRPT: 
- ****************************************************************************/
 
 
 
@@ -50,68 +25,67 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class LatencyBuffer
 {
-    @NonNull
-    private int _id;
+	@NonNull private int _id;
 
-    private int _latency;
-
-
-
-    public static final EventFactory<LatencyBuffer> LatencyEventFactory = new EventFactory<LatencyBuffer>()
-    {
-        private int _id = 0;
-
-        @Override
-        public LatencyBuffer newInstance()
-        {
-
-            if (_logger.isTraceEnabled())
-            {
-                if ((_id & (_id - 1)) == 0)
-                {
-                    _logger.trace("creating new latency buffers, count:{}", _id);
-                }
-
-
-            }
-            _id += 1;
-            return new LatencyBuffer(_id);
-        }
-    };
+	private int _latency;
 
 
 
-    public final int getId()
-    {
-        return _id;
-    }
+	public static final EventFactory<LatencyBuffer> LatencyEventFactory = new EventFactory<LatencyBuffer>()
+	{
+		private int _id = 0;
+
+		@Override
+		public LatencyBuffer newInstance()
+		{
+
+			if (_logger.isTraceEnabled())
+			{
+				if ((_id & (_id - 1)) == 0)
+				{
+					_logger.trace("creating new latency buffers, count:{}", _id);
+				}
+
+
+			}
+			_id += 1;
+			return new LatencyBuffer(_id);
+		}
+	};
 
 
 
-
-
-    public final void setId(int id_)
-    {
-        _id = id_;
-    }
+	public final int getId()
+	{
+		return _id;
+	}
 
 
 
 
 
-    public final int getLatency()
-    {
-        return _latency;
-    }
+	public final void setId(int id_)
+	{
+		_id = id_;
+	}
 
 
 
 
 
-    public final void setLatency(int latency_)
-    {
-        _latency = latency_;
-    }
+	public final int getLatency()
+	{
+		return _latency;
+	}
+
+
+
+
+
+	public final void setLatency(int latency_)
+	{
+		_latency = latency_;
+	}
 
 
 
