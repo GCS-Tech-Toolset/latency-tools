@@ -15,7 +15,7 @@
 	<logger name="org.apache.commons.beanutils.FluentPropertyBeanIntrospector" level="warn" />
 	<logger name="org.apache.commons" level="info" />
 	
-	<root level="trace">
+	<root level="info">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

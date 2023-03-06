@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- big test -->
+<plotter>
+	<Input>
+		<Type>bin</Type>
+	</Input>
+
+	<Output>
+		<!-- csv|xlsx -->
+		<Format>csv</Format>
+
+		<!-- only takes effect if the type is Excel
+			thus, the test should succeed -->
+		<Graphing>
+			<Graph>
+				<Title>50-75th Percentiles</Title>
+				<Percentiles>
+					<Percentile>50th</Percentile>
+					<Percentile>75th</Percentile>
+					<Percentile>25th</Percentile>
+				</Percentiles>
+			</Graph>
+
+			<Graph>
+				<Title>90-95th Percentiles</Title>
+				<Percentiles>
+					<Percentile>90</Percentile>
+					<Percentile>99th</Percentile>
+				</Percentiles>
+			</Graph>
+			<Graph>
+				<Title>Empty Table</Title>
+			</Graph>
+		</Graphing>
+	</Output>
+</plotter>

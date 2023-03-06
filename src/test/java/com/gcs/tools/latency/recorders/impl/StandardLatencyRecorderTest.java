@@ -21,12 +21,17 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 
 
@@ -46,20 +51,25 @@ import lombok.extern.slf4j.Slf4j;
 class StandardLatencyRecorderTest
 {
 
+	@TempDir Path _tmpDir;
+
+	private static final int ONE_MILLION = 1_000_000;
+
 	@Test
 	void test()
 	{
-		LatencyRecorderProperties props = LatencyRecorderFactory.createInstanceProperties("test", 300_000);
+		LatencyRecorderProperties props = LatencyRecorderFactory.createInstanceProperties("test", 10_000_000);
 		props.setSimpleRecorder(false);
+		props.setWriterCoreId(3);
+		props.setProcessorCoreId(2);
 		assertNotNull(props);
 
 		try (ILatencyRecorder latWrite = LatencyRecorderFactory.createLatencyWriter(props))
 		{
-
-			_logger.warn("latwrite.class=[{}]", latWrite.getClass().getSimpleName());
+			assertEquals("StandardLatencyRecorder", latWrite.getClass().getSimpleName());
 			long start = System.nanoTime();
-			int onMillionDesc = 1_000_000;
-			for (int i = 0; i < 1_000_000; i++)
+			int onMillionDesc = ONE_MILLION;
+			for (int i = 0; i < ONE_MILLION; i++)
 			{
 				latWrite.recordLatency(onMillionDesc--);
 			}
@@ -83,13 +93,16 @@ class StandardLatencyRecorderTest
 
 		try (DataInputStream dis = new DataInputStream(new FileInputStream(props.getFname())))
 		{
-			int onMillionDesc = 1_000_000;
+			int onMillionDesc = ONE_MILLION;
 			int lat, count = 0;
 			while (dis.available() > 0)
 			{
 				lat = dis.readInt();
-				assertEquals(onMillionDesc--, lat);
-				if (++count % 10_000 == 0)
+				if (onMillionDesc-- != lat)
+				{
+					fail("bad matchup!");
+				}
+				if (++count % 100_000 == 0)
 				{
 					_logger.info("good for:{}", count);
 				}
@@ -99,6 +112,19 @@ class StandardLatencyRecorderTest
 		{
 			_logger.error(ex_.toString(), ex_);
 			fail(ex_.toString());
+		}
+
+
+
+		try
+		{
+			Path toDel = Paths.get(props.getFpath(), props.getFname());
+			_logger.warn("deleting:{}", toDel);
+			//Files.deleteIfExists(toDel);
+		}
+		catch (Exception ex_)
+		{
+			_logger.error(ex_.toString(), ex_);
 		}
 
 	}
