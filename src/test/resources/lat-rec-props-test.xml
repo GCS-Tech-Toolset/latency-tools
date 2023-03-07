@@ -1,0 +1,17 @@
+<latency-recorder>
+	<LatencyRecorder>
+		<test>
+			<ThreadControl>
+				<ProcessingCoreId>1</ProcessingCoreId>
+				<WriterCoreId>2</WriterCoreId>
+			</ThreadControl>
+		</test>
+		
+		<test2>
+      <ThreadControl>
+        <ProcessingCoreId>3</ProcessingCoreId>
+        <WriterCoreId>4</WriterCoreId>
+      </ThreadControl>
+    </test2>
+	</LatencyRecorder>
+</latency-recorder>

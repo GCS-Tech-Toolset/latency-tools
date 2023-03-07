@@ -1,3 +1,11 @@
+/**
+ * Author: kgoldstein
+ * Date: Mar 7, 2023
+ * Terms: Expressly forbidden for use without written consent from the author
+ * File: LatencyRecorderFactory.java
+ */
+
+
 
 
 
@@ -23,8 +31,8 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 
 
-import com.gcs.tools.latency.recorders.impl.StandardLatencyRecorder;
 import com.gcs.tools.latency.recorders.impl.SimpleLatencyRecorder;
+import com.gcs.tools.latency.recorders.impl.StandardLatencyRecorder;
 import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.BusySpinWaitStrategy;
 import com.lmax.disruptor.YieldingWaitStrategy;
@@ -32,7 +40,6 @@ import com.lmax.disruptor.dsl.ProducerType;
 
 
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

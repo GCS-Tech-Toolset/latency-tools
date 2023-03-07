@@ -1,3 +1,9 @@
+/**
+ * Author: kgoldstein
+ * Date: Mar 6, 2023
+ * Terms: Expressly forbidden for use without written consent from the author
+ * File: LatencyStatsExcelWriter.java
+ */
 
 
 
@@ -229,7 +235,7 @@ public class LatencyStatsExcelWriter implements ILatencyStatsWriter
 		cell = row.createCell(COL_OFFSET);
 		cell.setCellValue("Support:");
 		cell = row.createCell(COL_OFFSET + 2);
-		cell.setCellValue("https://n5corp.com");
+		cell.setCellValue("kevin@goldsteinconsultingservices.com");
 
 		startingRow += 1;
 		row = dataSheet_.getRow(++startingRow);
