@@ -287,7 +287,12 @@ public class AppProps
 
     public char[] getVersion()
     {
-        return VersionInfo.calcVersion(AppProps.class).toCharArray();
+    	var version = VersionInfo.calcVersion(getClass());
+    	if ( version == null ) 
+    	{
+    		return "unk".toCharArray();
+    	}
+        return version.toCharArray();
     }
 
 
