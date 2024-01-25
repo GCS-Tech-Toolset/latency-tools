@@ -1,19 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ARTIFACT>
 
-  	<AppMetrics>
-		<Enabled>true</Enabled>
-		<AutoCreateDb>false</AutoCreateDb> <!-- CHANGE THIS IF NEW APP -->
-		<BatchSizing>1000</BatchSizing>
-		<ReportingFrequencyInSeconds>5</ReportingFrequencyInSeconds>
-        <AppName>ARTIFACT</AppName>
-        <Registry>Influx</Registry>
+<plotter>
+	<Input>
+		<WarmupDataPoints>100000</WarmupDataPoints>
 
-		<DB>
-			<Name>XXX</Name>
-			<UserName>ee6SHf2cfaEgkYpJsQNZHUSPvpJ81ScU</UserName>
-			<Pasword>qaBernNglWl3GmR7m7KUz1bQZstYXPpz</Pasword>
-			<URI>http://localhost:8086</URI>
-		</DB>
-	</AppMetrics>
-</ARTIFACT>
+		<Sampling>
+			<SampleSize>1000</SampleSize>
+			<MaxDataPointValue>5000</MaxDataPointValue>
+		</Sampling>
+	</Input>
+
+	<Output>
+		<!-- csv|xlsx -->
+		<Format>xlsx</Format>
+
+		<!-- only takes effect if the type is Excel -->
+		<Graphing>
+			<Graph>
+				<Title>50-75th Percentiles</Title>
+				<Percentiles>
+					<Percentile>50th</Percentile>
+					<Percentile>75th</Percentile>
+				</Percentiles>
+			</Graph>
+
+			<Graph>
+				<Title>90-95th Percentiles</Title>
+				<Percentiles>
+					<Percentile>90th</Percentile>
+					<Percentile>99th</Percentile>
+				</Percentiles>
+			</Graph>
+
+			<Graph>
+				<Title>99-99.9th Percentiles</Title>
+				<Percentiles>
+					<Percentile>99th</Percentile>
+					<Percentile>99.9th</Percentile>
+				</Percentiles>
+			</Graph>
+
+			<Graph>
+				<Title>99.99-99.999th Percentiles</Title>
+				<Percentiles>
+					<Percentile>99.99th</Percentile>
+					<Percentile>99.999th</Percentile>
+				</Percentiles>
+			</Graph>
+
+			<Graph>
+				<Title>99.9999th Percentiles</Title>
+				<Percentiles>
+					<Percentile>99.9999th</Percentile>
+				</Percentiles>
+			</Graph>
+
+			<Graph>
+				<Title>Max</Title>
+				<Percentiles>
+					<Percentile>Max</Percentile>
+				</Percentiles>
+			</Graph>
+
+		</Graphing>
+	</Output>
+</plotter>

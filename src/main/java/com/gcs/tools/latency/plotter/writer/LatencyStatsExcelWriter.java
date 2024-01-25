@@ -137,11 +137,11 @@ public class LatencyStatsExcelWriter implements ILatencyStatsWriter
 			String[] headers = writeHeaders(dataSheet);
 			writeDataPoints(extractedData_, dataSheet);
 			int nextRow = addRunInfo(extractedData_, dataSheet, style);
-			nextRow = addViolationsChart(extractedData_,
+			/*nextRow = addViolationsChart(extractedData_,
 					_appProps.getTitle(),
 					dataSheet,
 					headers,
-					nextRow);
+					nextRow);*/
 			addCharts(extractedData_, dataSheet, headers, nextRow);
 			addLatencyHistogram(extractedData_, histSheet);
 
