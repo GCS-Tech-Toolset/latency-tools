@@ -210,15 +210,18 @@ public class LatencyRecorderFactory
 
     public static synchronized ILatencyRecorder createLatencyWriter(LatencyRecorderProperties props_) throws ConfigurationException
     {
-        if (props_.getProcessorCoreId() < 0)
+        if (props_.getExpectedMsgRage() > 1_000_000)
         {
-            _logger.warn("target MPS > 1M, and no processor core id specified. NOT RECOMMENDED");
-            _logger.warn("set: {}", props_.getKeyFqn(LatencyRecorderProperties.PROCESSOR_CORE_ID));
-        }
-        if (props_.getWriterCoreId() < 0)
-        {
-            _logger.warn("target MPS > 1M, and no processor core id specified. NOT RECOMMENDED");
-            _logger.warn("set: {}", props_.getKeyFqn(LatencyRecorderProperties.WRITER_CORE_ID));
+            if (props_.getProcessorCoreId() < 0 )
+            {
+                _logger.warn("target MPS > 1M, and no processor core id specified. NOT RECOMMENDED");
+                _logger.warn("set processor-core: {}", props_.getKeyFqn(LatencyRecorderProperties.PROCESSOR_CORE_ID));
+            }
+            if (props_.getWriterCoreId() < 0)
+            {
+                _logger.warn("target MPS > 1M, and no writer core id specified. NOT RECOMMENDED");
+                _logger.warn("set writer-core: {}", props_.getKeyFqn(LatencyRecorderProperties.WRITER_CORE_ID));
+            }
         }
 
         if (props_.isSimpleRecorder())

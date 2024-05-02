@@ -52,12 +52,6 @@
             <scope>provided</scope>
         </dependency>
         <!-- gcs toolset -->
-
-        <dependency>
-            <groupId>gcs.toolset</groupId>
-            <artifactId>metrics</artifactId>
-            <version>1.32</version>
-        </dependency>
         <dependency>
             <groupId>gcs.toolset</groupId>
             <artifactId>config</artifactId>
