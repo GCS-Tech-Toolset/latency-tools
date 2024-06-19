@@ -58,7 +58,7 @@ class StandardLatencyRecorderTest
 	@Test
 	void test()
 	{
-		LatencyRecorderProperties props = LatencyRecorderFactory.createInstanceProperties("test", 10_000_000);
+		LatencyRecorderProperties props = LatencyRecorderFactory.createInstanceProperties("test", 5_000_000);
 		props.setSimpleRecorder(false);
 		props.setWriterCoreId(3);
 		props.setProcessorCoreId(2);
@@ -69,9 +69,9 @@ class StandardLatencyRecorderTest
 			assertEquals("StandardLatencyRecorder", latWrite.getClass().getSimpleName());
 			long start = System.nanoTime();
 			int onMillionDesc = ONE_MILLION;
-			for (int i = 0; i < ONE_MILLION; i++)
+			for (int i = 0; i < ONE_MILLION*100; i++)
 			{
-				latWrite.recordLatency(onMillionDesc--);
+				latWrite.recordLatency(i);
 			}
 			long end = System.nanoTime();
 			_logger.warn("finished writing 1million latency points, total time:[{}] nanos", new DecimalFormat("#,###").format(end - start));
@@ -93,12 +93,13 @@ class StandardLatencyRecorderTest
 
 		try (DataInputStream dis = new DataInputStream(new FileInputStream(props.getFname())))
 		{
-			int onMillionDesc = ONE_MILLION;
+			int onMillionDesc = ONE_MILLION*100;
 			int lat, count = 0;
+			int i=0;
 			while (dis.available() > 0)
 			{
 				lat = dis.readInt();
-				if (onMillionDesc-- != lat)
+				if (i++ != lat)
 				{
 					fail("bad matchup!");
 				}
