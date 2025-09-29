@@ -53,28 +53,28 @@ public class LatencyHistogramTest
 			if (i % itrCnt == 0)
 			{
 				delta /= 10_000;
-				_logger.debug("insert time for [{}] iteratons={}", itrCnt, delta);
+				log.debug("insert time for [{}] iteratons={}", itrCnt, delta);
 				delta = 0;
 			}
 		}
-		_logger.debug("add latency time:{} seconds", TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start));
+		log.debug("add latency time:{} seconds", TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start));
 
 		start = System.nanoTime();
 		assertEquals(insertSz / 2, hst.getPercentileValue(50));
 		assertEquals(1, hst.getFreqForPercentile(50));
-		_logger.debug("query time:{} millis", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
+		log.debug("query time:{} millis", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
 
 		start = System.nanoTime();
 		for (int i = 0; i < insertSz; i++)
 		{
 			hst.add(i);
 		}
-		_logger.debug("add latency time:{} seconds", TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start));
+		log.debug("add latency time:{} seconds", TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start));
 
 		start = System.nanoTime();
 		assertEquals(4_500_000, hst.getPercentileValue(50));
 		assertEquals(2, hst.getFreqForPercentile(50));
-		_logger.debug("query time:{} millis", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
+		log.debug("query time:{} millis", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
 
 	}
 
@@ -85,7 +85,7 @@ public class LatencyHistogramTest
 	@Test
 	public void testLargeSimilarValues()
 	{
-		_logger.debug("initializing random values");
+		log.debug("initializing random values");
 		DecimalFormat fmt = new DecimalFormat("#,###");
 		int latsz = 10_000;
 		int[] latencies = new int[latsz];
@@ -93,7 +93,7 @@ public class LatencyHistogramTest
 		{
 			latencies[i] = i;
 		}
-		_logger.debug("finished initializing random values");
+		log.debug("finished initializing random values");
 
 		LatencyHistogram hst = new LatencyHistogram();
 		long start = System.nanoTime();
@@ -102,8 +102,8 @@ public class LatencyHistogramTest
 		{
 			hst.add(latencies[i % latsz]);
 		}
-		_logger.debug("add latency time:{} seconds", TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start));
-		_logger.debug("total number of entries:{}", fmt.format(hst.getSize()));
+		log.debug("add latency time:{} seconds", TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start));
+		log.debug("total number of entries:{}", fmt.format(hst.getSize()));
 		assertEquals(sz, hst.getSize());
 
 		for (int i = 0; i <= 100; i++)
@@ -120,8 +120,8 @@ public class LatencyHistogramTest
 			start = System.nanoTime();
 			long valAtP = hst.getPercentileValue(percentile);
 			long freqAtP = hst.getFreqForValue(valAtP);
-			_logger.debug("query time:{} microseconds", TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - start));
-			_logger.debug("percentile:{}, value-at-percentile: {}, percentile frequency:{}", percentile, valAtP, freqAtP);
+			log.debug("query time:{} microseconds", TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - start));
+			log.debug("percentile:{}, value-at-percentile: {}, percentile frequency:{}", percentile, valAtP, freqAtP);
 			assertEquals(sz / latsz, freqAtP);
 		}
 
@@ -134,7 +134,7 @@ public class LatencyHistogramTest
 	@Test
 	public void testSpecialValues()
 	{
-		_logger.debug("initializing random values");
+		log.debug("initializing random values");
 		int latsz = 100;
 		int[] latencies = new int[latsz];
 		latencies[0] = 1;
@@ -156,8 +156,8 @@ public class LatencyHistogramTest
 		double percentile = 50;
 		long valAtP = hst.getPercentileValue(percentile);
 		long freqAtP = hst.getFreqForValue(valAtP);
-		_logger.debug("percentile:{}, value at percentile: {}, percentile frequency:{}", percentile, valAtP, freqAtP);
-		_logger.debug("finished initializing random values");
+		log.debug("percentile:{}, value at percentile: {}, percentile frequency:{}", percentile, valAtP, freqAtP);
+		log.debug("finished initializing random values");
 	}
 
 

@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadFactory;
 public class AffinitizedThreadFactory implements ThreadFactory
 {
     public static final Thread.UncaughtExceptionHandler DEFAULT_UNCAUGHT_EXCEPTION_HANDLER = (t, e) -> {
-        _logger.error("Uncaught exception in thread: {}", t.getName(), e);
+        log.error("Uncaught exception in thread: {}", t.getName(), e);
         e.printStackTrace(System.err);
     };
 

@@ -72,7 +72,7 @@ public class StatsReportingThread extends Thread
 			}
 			catch (InterruptedException ex_)
 			{
-				_logger.error(ex_.toString(), ex_);
+				log.error(ex_.toString(), ex_);
 			}
 		}
 	}
@@ -84,7 +84,7 @@ public class StatsReportingThread extends Thread
 	public final void logHistogram(final @NonNull Histogram hst_)
 	{
 		Histogram copy = hst_.copy();
-		_logger.info("{}; 50thP:{}; 90thP:{}; 95thP:{}; 99thP:{}={}; 99.9thP:{}={}; 99.99thP:{}={}; 99.9999thP:{}={}; count:{}",
+		log.info("{}; 50thP:{}; 90thP:{}; 95thP:{}; 99thP:{}={}; 99.9thP:{}={}; 99.99thP:{}={}; 99.9999thP:{}={}; count:{}",
 				_name,
 				copy.getValueAtPercentile(50),
 				copy.getValueAtPercentile(90),

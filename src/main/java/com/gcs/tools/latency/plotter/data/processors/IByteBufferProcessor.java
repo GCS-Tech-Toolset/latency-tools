@@ -55,9 +55,9 @@ public abstract class IByteBufferProcessor implements Callable<PercentileEntry>
 	public PercentileEntry call() throws Exception
 	{
 
-		if (_logger.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
-			_logger.debug("starting reader:{}, idx:{}", Thread.currentThread().getId(), _idx);
+			log.debug("starting reader:{}, idx:{}", Thread.currentThread().getId(), _idx);
 		}
 
 		List<LatencyEntry> entries = readData();
@@ -104,9 +104,9 @@ public abstract class IByteBufferProcessor implements Callable<PercentileEntry>
 			maxId = entries_.get((int) (cntr - 1)).getIdx();
 		}
 
-		if (_logger.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
-			_logger.debug("total entries read:{}, start-id:{}, end-id:{}", entries_.size(), minId, maxId);
+			log.debug("total entries read:{}, start-id:{}, end-id:{}", entries_.size(), minId, maxId);
 		}
 
 	}
@@ -135,11 +135,11 @@ public abstract class IByteBufferProcessor implements Callable<PercentileEntry>
 		}
 
 		pe.evaluateSection();
-		if (pe.getNViolations() > 0)
+		if (pe.getNumViolations() > 0)
 		{
-			if (_logger.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				_logger.debug("violation detected, percentile:{}", pe.toString());
+				log.debug("violation detected, percentile:{}", pe.toString());
 			}
 		}
 

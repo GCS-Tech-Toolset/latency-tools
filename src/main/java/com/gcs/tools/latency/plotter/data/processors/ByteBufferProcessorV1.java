@@ -68,17 +68,17 @@ public class ByteBufferProcessorV1 extends IByteBufferProcessor
 				long mod = lentry.getIdx() % writePoint;
 				if ((mod + preWarmupWritePoint) >= writePoint || mod == 0)
 				{
-					if (_logger.isTraceEnabled())
+					if (log.isTraceEnabled())
 					{
-						_logger.trace("data point:{} is within pre-warmup range:{}", lentry.getIdx(), preWarmupWritePoint);
+						log.trace("data point:{} is within pre-warmup range:{}", lentry.getIdx(), preWarmupWritePoint);
 					}
 					continue;
 				}
 				if (mod <= postWarmupWritePoint)
 				{
-					if (_logger.isTraceEnabled())
+					if (log.isTraceEnabled())
 					{
-						_logger.trace("data point:{} is within post-warmup range:{}", lentry.getIdx(), postWarmupWritePoint);
+						log.trace("data point:{} is within post-warmup range:{}", lentry.getIdx(), postWarmupWritePoint);
 					}
 					continue;
 				}
@@ -88,7 +88,7 @@ public class ByteBufferProcessorV1 extends IByteBufferProcessor
 		}
 		if (_buffer.remaining() > 0)
 		{
-			_logger.error("data left in buffer, sz:{}", _buffer.remaining());
+			log.error("data left in buffer, sz:{}", _buffer.remaining());
 		}
 
 		logMinMaxIds(entries);

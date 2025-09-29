@@ -114,7 +114,7 @@ public class PopulationStatisticsTest
 	        latencies[i - 1] = i;
 	    }
 	
-	    _logger.debug("population 400M values");
+	    log.debug("population 400M values");
 	    long FourHunderMillion = 400_000_000;
 	    long startTime = System.nanoTime();
 	    LatencyHistogram lh = new LatencyHistogram();
@@ -125,7 +125,7 @@ public class PopulationStatisticsTest
 	        }
 	    }
 	    long endTime = System.nanoTime();
-	    _logger.debug("finished, average insert time:{}; total time: {} seconds", (endTime - startTime) / FourHunderMillion,
+	    log.debug("finished, average insert time:{}; total time: {} seconds", (endTime - startTime) / FourHunderMillion,
 	                  TimeUnit.NANOSECONDS.toSeconds(endTime - startTime));
 	
 	    // should be ok

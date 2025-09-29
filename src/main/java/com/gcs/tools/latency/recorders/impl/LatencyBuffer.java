@@ -45,11 +45,11 @@ public class LatencyBuffer
 		public LatencyBuffer newInstance()
 		{
 
-			if (_logger.isTraceEnabled())
+			if (log.isTraceEnabled())
 			{
 				if ((_id & (_id - 1)) == 0)
 				{
-					_logger.trace("creating new latency buffers, count:{}", _id);
+					log.trace("creating new latency buffers, count:{}", _id);
 				}
 
 

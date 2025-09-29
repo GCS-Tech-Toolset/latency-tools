@@ -83,17 +83,17 @@ public class ThreadAffinityChecker
             }
             else
             {
-                _logger.error("No valid option provided. Use -h for help.");
+                log.error("No valid option provided. Use -h for help.");
             }
         }
         catch (ParseException e)
         {
-            _logger.error("Failed to parse command line options", e);
+            log.error("Failed to parse command line options", e);
             formatter.printHelp("ThreadAffinityViaCommand", options);
         }
         catch (Exception e)
         {
-            _logger.error("Error executing the program", e);
+            log.error("Error executing the program", e);
         }
     }
 
@@ -142,12 +142,12 @@ public class ThreadAffinityChecker
             int count = 0;
             while ((line = reader.readLine()) != null)
             {
-                _logger.info(line);
+                log.info(line);
                 count++;
             }
             if (count > 1)
             {
-                _logger.error("Multiple processes found, please specify a more unique identifier");
+                log.error("Multiple processes found, please specify a more unique identifier");
                 System.exit(1);
             }
         }
@@ -169,13 +169,13 @@ public class ThreadAffinityChecker
 
     private static void printCommandOutput(Process process, String header) throws IOException
     {
-        _logger.info(header);
+        log.info(header);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())))
         {
             String line;
             while ((line = reader.readLine()) != null)
             {
-                _logger.info(line);
+                log.info(line);
             }
         }
     }

@@ -53,9 +53,9 @@ public class LatWriterStatsCsvWriterTest
 		Path tmpPath = null;
 		tmpPath = Paths.get(_folder.toString(), "test");
 		props.setOutputFile(tmpPath.toString());
-		if (_logger.isInfoEnabled())
+		if (log.isInfoEnabled())
 		{
-			_logger.info("tmpPath:{}", props.getOutputFile());
+			log.info("tmpPath:{}", props.getOutputFile());
 		}
 		props.setInputFile(Paths.get(".", "src", "test", "resources", "latencies.bin").toString());
 		IDataExtractor dataExtractor = DataExtractorFactory.buildDataExtractor();

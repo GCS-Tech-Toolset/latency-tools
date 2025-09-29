@@ -6,33 +6,21 @@
  */
 
 
-
-
-
 package com.gcs.tools.latency.plotter.types;
-
-
-
-
-
-import java.nio.ByteBuffer;
-
 
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
+import java.nio.ByteBuffer;
 
 
 @Data
 @NoArgsConstructor(staticName = "of")
 @AllArgsConstructor(staticName = "of")
-public class BufferData
-{
-	private ByteBuffer	_buffer;
-	private long		_startIdx;
+public class BufferData {
+    private ByteBuffer buffer;
+    private long startIdx;
 
 }

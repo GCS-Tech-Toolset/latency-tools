@@ -80,7 +80,7 @@ public class WritePointTestViolations {
         List<PercentileEntry> pList = data.getPercentileList();
         assertEquals(34, pList.size());
         assertEquals(52, data.getGlobalValues().getSize());
-        assertEquals(51, data.getGlobalValues().get50thPercentile(), 0.01);
+        assertEquals(51, data.getGlobalValues().getPercentile50th(), 0.01);
 
         // prepare list of expected keys
         HashSet<Integer> expectedKeys = new HashSet<>();
@@ -88,8 +88,8 @@ public class WritePointTestViolations {
             expectedKeys.add(i);
         }
         for (int i = 6; i <= 100; i += 6) {
-            if (_logger.isTraceEnabled()) {
-                _logger.trace("removing:{}/{}", i - 1, i);
+            if (log.isTraceEnabled()) {
+                log.trace("removing:{}/{}", i - 1, i);
             }
             expectedKeys.remove(i - 1); // exclusive on the lowerbound
             expectedKeys.remove(i);
@@ -98,8 +98,8 @@ public class WritePointTestViolations {
 
         // iterate through actual values, and make sure the keys are there
         DescriptiveStatistics stats = new DescriptiveStatistics();
-        for (Entry<Long, LongWrapper> a : data.getGlobalValues().getHst().getFrequencyMap().entrySet()) {
-            for (int i = 0; i < a.getValue().getVal(); i++) {
+        for (Entry<Long, LongWrapper> a : data.getGlobalValues().getHistogram().getFrequencyMap().entrySet()) {
+            for (int i = 0; i < a.getValue().getValue(); i++) {
                 stats.addValue((double)a.getKey());
                 assertTrue(expectedKeys.contains(a.getKey().intValue()));
                 if (expectedKeys.contains(a.getKey().intValue())) {

@@ -58,7 +58,7 @@ public class AffinitizedRunnable implements Runnable
         }
         else
         {
-            _logger.error("thread name is null or empty");
+            log.error("thread name is null or empty");
             Thread.currentThread().setName("thread-name-not-set");
         }
 
@@ -67,31 +67,31 @@ public class AffinitizedRunnable implements Runnable
         {
             try
             {
-                _logger.warn("setting affinity for:{} to:{}", _name, _cpuAffinity);
+                log.warn("setting affinity for:{} to:{}", _name, _cpuAffinity);
                 setAffinity(_cpuAffinity);
             }
             catch (Exception ex_)
             {
-                _logger.error(ex_.toString(), ex_);
+                log.error(ex_.toString(), ex_);
             }
         }
-        else if (_logger.isWarnEnabled())
+        else if (log.isWarnEnabled())
         {
-            _logger.warn("not setting affinity for:{} as not running on linux", _name);
+            log.warn("not setting affinity for:{} as not running on linux", _name);
         }
 
         if (_isDaemon)
         {
-            if (_logger.isTraceEnabled())
+            if (log.isTraceEnabled())
             {
-                _logger.trace("setting thread:{} as daemon", _name);
+                log.trace("setting thread:{} as daemon", _name);
             }
             Thread.currentThread().setDaemon(true);
         }
 
 
-        _logger.info("running:{}", _name);
+        log.info("running:{}", _name);
         _runnable.run();
-        _logger.info("exiting:{}", _name);
+        log.info("exiting:{}", _name);
     }
 }

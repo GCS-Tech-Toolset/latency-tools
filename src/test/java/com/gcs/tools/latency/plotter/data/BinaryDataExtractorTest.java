@@ -160,7 +160,7 @@ public class BinaryDataExtractorTest
 		assertNotNull(data);
 		assertEquals(6, data.getPercentileList().size());
 		assertEquals(5.0, data.getGlobalValues().getMean(), 0.01);
-		assertEquals(5.0, data.getGlobalValues().get50thPercentile(), 0.01);
+		assertEquals(5.0, data.getGlobalValues().getPercentile50th(), 0.01);
 	}
 
 }

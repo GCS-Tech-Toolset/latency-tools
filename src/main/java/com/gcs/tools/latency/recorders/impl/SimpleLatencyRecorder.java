@@ -65,9 +65,9 @@ public class SimpleLatencyRecorder implements ILatencyRecorder
 		_latencies = new int[props_.getCapacity()];
 		_props = props_;
 		_noLongerAcceptingValues = false;
-		if (_logger.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
-			_logger.debug("opened successfully with {} slots", new DecimalFormat("#,###").format(props_.getCapacity()));
+			log.debug("opened successfully with {} slots", new DecimalFormat("#,###").format(props_.getCapacity()));
 		}
 	}
 
@@ -98,9 +98,9 @@ public class SimpleLatencyRecorder implements ILatencyRecorder
 	{
 		_noLongerAcceptingValues = true;
 		writeToDisk();
-		if (_logger.isTraceEnabled())
+		if (log.isTraceEnabled())
 		{
-			_logger.debug("closed successfully");
+			log.debug("closed successfully");
 		}
 		return;
 	}
@@ -123,20 +123,20 @@ public class SimpleLatencyRecorder implements ILatencyRecorder
 			{
 				dos.writeInt(_latencies[i]);
 
-				if (_logger.isTraceEnabled() && (i & (i - 1)) == 0)
+				if (log.isTraceEnabled() && (i & (i - 1)) == 0)
 				{
-					_logger.trace("writing values, count:{}", i);
+					log.trace("writing values, count:{}", i);
 				}
 			}
-			if (_logger.isTraceEnabled())
+			if (log.isTraceEnabled())
 			{
-				_logger.trace("final count written to disk:{}", _currentIdx);
+				log.trace("final count written to disk:{}", _currentIdx);
 			}
 			return true;
 		}
 		catch (Exception ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 		}
 		return false;
 	}
@@ -147,10 +147,10 @@ public class SimpleLatencyRecorder implements ILatencyRecorder
 
 	private Path getWritablePath()
 	{
-		Path writable = Paths.get(_props.getFpath(), _props.getFname());
-		if (_logger.isDebugEnabled())
+		Path writable = Paths.get(_props.getFilePath(), _props.getFileName());
+		if (log.isDebugEnabled())
 		{
-			_logger.debug("storing recorded values to:{}", writable.toString());
+			log.debug("storing recorded values to:{}", writable.toString());
 		}
 		return writable;
 	}

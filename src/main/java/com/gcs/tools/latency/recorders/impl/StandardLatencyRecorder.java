@@ -85,9 +85,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		ConfigUtils.logToTrace(_props);
 
 		int buffSz = _props.getCapacity();
-		if (_logger.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
-			_logger.debug("total slots in buffer:{}", buffSz);
+			log.debug("total slots in buffer:{}", buffSz);
 		}
 
 		determineNanoOverhead();
@@ -111,7 +111,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		}
 		catch (IOException ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 	{
 		if (_noLongerAcceptingEvents)
 		{
-			_logger.error("no longer accepting values");
+			log.error("no longer accepting values");
 			return false;
 		}
 
@@ -136,7 +136,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		}
 		catch (Exception ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 		}
 		finally
 		{
@@ -153,7 +153,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 	@Override
 	public void close()
 	{
-		_logger.debug("shutting down");
+		log.debug("shutting down");
 		_events.shutdown();
 		_noLongerAcceptingEvents = true;
 		while (_eventsReceived != _diskWriter._eventsWrittenToDisk)
@@ -161,11 +161,11 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			try
 			{
 				Thread.sleep(100);
-				_logger.warn("still not drained, events recieved:{}, diskwriter.eventstodisk:{}", _eventsReceived, _diskWriter._eventsWrittenToDisk);
+				log.warn("still not drained, events recieved:{}, diskwriter.eventstodisk:{}", _eventsReceived, _diskWriter._eventsWrittenToDisk);
 			}
 			catch (InterruptedException ex_)
 			{
-				_logger.error(ex_.toString(), ex_);
+				log.error(ex_.toString(), ex_);
 			}
 		}
 
@@ -176,12 +176,12 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		}
 		catch (InterruptedException ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 		}
 
-		if (_logger.isTraceEnabled())
+		if (log.isTraceEnabled())
 		{
-			_logger.trace("eventsRecived[{}]=[{}]eventsWrittenToDisk", _eventsReceived, _diskWriter._eventsWrittenToDisk);
+			log.trace("eventsRecived[{}]=[{}]eventsWrittenToDisk", _eventsReceived, _diskWriter._eventsWrittenToDisk);
 		}
 
 		return;
@@ -220,9 +220,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		}
 
 		_nanoOverhead = (System.nanoTime() - nanoStart) / samples;
-		if (_logger.isInfoEnabled())
+		if (log.isInfoEnabled())
 		{
-			_logger.info("nano-overhead:{}", _nanoOverhead);
+			log.info("nano-overhead:{}", _nanoOverhead);
 		}
 		return _nanoOverhead;
 	}
@@ -250,7 +250,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		{
 			super("BufferFileWriter");
 			_eventsWrittenToDisk = 0;
-			ROTEATE_ON_END_OF_BATCH = _props.getExpectedMsgRage() < 1_000_000;
+			ROTEATE_ON_END_OF_BATCH = _props.getExpectedMsgRate() < 1_000_000;
 
 			final int Gb8 = getBytesFromIntCount(16_777_216);
 			final int buffSz = Math.multiplyExact(_props.getRatioByteBufferEntries(), _props.getCapacity());
@@ -258,12 +258,12 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			if (_defSz > (Integer.MAX_VALUE / 4))
 			{
 				_defSz = Gb8;
-				_logger.error("specified property is invalid, resetting def-buffer-size to original default:[{}] (LatencyWriter.FileWriter.BufferSize)", _defSz);
+				log.error("specified property is invalid, resetting def-buffer-size to original default:[{}] (LatencyWriter.FileWriter.BufferSize)", _defSz);
 			}
 
-			if (_logger.isTraceEnabled())
+			if (log.isTraceEnabled())
 			{
-				_logger.trace("default buffer size:{}", _defSz);
+				log.trace("default buffer size:{}", _defSz);
 			}
 
 
@@ -277,12 +277,12 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 
 		private void initFiles() throws FileNotFoundException
 		{
-			Path fqn = Paths.get(_props.getFpath(), _props.getFname());
+			Path fqn = Paths.get(_props.getFilePath(), _props.getFileName());
 			_file = new FileOutputStream(fqn.toFile());
 			_channel = _file.getChannel();
-			if (_logger.isInfoEnabled())
+			if (log.isInfoEnabled())
 			{
-				_logger.info("latency file:{}", fqn.toAbsolutePath().toString());
+				log.info("latency file:{}", fqn.toAbsolutePath().toString());
 			}
 		}
 
@@ -294,7 +294,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		{
 			try
 			{
-				int nBuffCnt = _props.getCntBuffers();
+				int nBuffCnt = _props.getBufferCount();
 				_availableBuffers = new ArrayDeque<>(nBuffCnt);
 				_writingBuffer = new ArrayDeque<>(nBuffCnt);
 				for (int i = 0; i < nBuffCnt - 1; i++)
@@ -305,7 +305,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			}
 			catch (Exception ex_)
 			{
-				_logger.error(ex_.toString(), ex_);
+				log.error(ex_.toString(), ex_);
 			}
 		}
 
@@ -325,9 +325,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 					if (dumpBufferToDisk(buff))
 					{
 						_availableBuffers.add(buff);
-						if (_logger.isTraceEnabled())
+						if (log.isTraceEnabled())
 						{
-							_logger.trace("added new buffer back to pool for consumption");
+							log.trace("added new buffer back to pool for consumption");
 						}
 					}
 				}
@@ -337,7 +337,7 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			}
 			catch (IOException ex_)
 			{
-				_logger.error(ex_.toString(), ex_);
+				log.error(ex_.toString(), ex_);
 			}
 
 		}
@@ -353,16 +353,16 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			int coreId = _props.getProcessorCoreId();
 			if (coreId < 0)
 			{
-				_logger.info("[{}/{}] not pinned, no action taken",
+				log.info("[{}/{}] not pinned, no action taken",
 						Thread.currentThread().getName(),
 						_props.getName());
 				return;
 			}
 
 			Affinity.setAffinity(coreId);
-			if (_logger.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				_logger.debug("[{}/{}] setting affinity to:{}",
+				log.debug("[{}/{}] setting affinity to:{}",
 						_props.getName(),
 						Thread.currentThread().getName(),
 						coreId);
@@ -377,9 +377,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		@Override
 		public void onShutdown()
 		{
-			if (_logger.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				_logger.debug("received shutdown");
+				log.debug("received shutdown");
 			}
 
 			_noLongerAcceptingEvents = true;
@@ -430,9 +430,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 		 */
 		protected final ByteBuffer queueForWriteAndGetNewBuffer(final ByteBuffer buff_, final String reason_) throws InterruptedException
 		{
-			if (_logger.isTraceEnabled())
+			if (log.isTraceEnabled())
 			{
-				_logger.trace("rotating buffer, total available buffers:{}; reason:{}", _availableBuffers.size(), reason_);
+				log.trace("rotating buffer, total available buffers:{}; reason:{}", _availableBuffers.size(), reason_);
 			}
 			_writingBuffer.add(_currentBuffer);
 			ByteBuffer buff = null;//_availableBuffers.pollFirst();
@@ -452,9 +452,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			int coreId = _props.getWriterCoreId();
 			if (coreId < 0)
 			{
-				if (_logger.isDebugEnabled())
+				if (log.isDebugEnabled())
 				{
-					_logger.debug("[{}/{}] not pinned, no action taken",
+					log.debug("[{}/{}] not pinned, no action taken",
 							_props.getName(),
 							Thread.currentThread().getName());
 				}
@@ -462,9 +462,9 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 			}
 
 			Affinity.setAffinity(coreId);
-			if (_logger.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				_logger.debug("[{}/{}] setting affinity to:{}",
+				log.debug("[{}/{}] setting affinity to:{}",
 						_props.getName(),
 						Thread.currentThread().getName(),
 						coreId);
@@ -497,21 +497,21 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 					if (dumpBufferToDisk(buff))
 					{
 						_availableBuffers.add(buff);
-						if (_logger.isTraceEnabled())
+						if (log.isTraceEnabled())
 						{
-							_logger.trace("added new buffer back to pool for consumption");
+							log.trace("added new buffer back to pool for consumption");
 						}
 					}
 				}
 				catch (Exception ex_)
 				{
-					_logger.error(ex_.toString(), ex_);
+					log.error(ex_.toString(), ex_);
 				}
 			}
 
-			if (_logger.isInfoEnabled())
+			if (log.isInfoEnabled())
 			{
-				_logger.info("finished writing to file:{}", Paths.get(_props.getFpath(), _props.getFname()));
+				log.info("finished writing to file:{}", Paths.get(_props.getFilePath(), _props.getFileName()));
 			}
 		}
 
@@ -532,14 +532,14 @@ public class StandardLatencyRecorder implements ILatencyRecorder
 				_channel.write(buff);
 				buff.clear();
 
-				if (_logger.isTraceEnabled())
+				if (log.isTraceEnabled())
 				{
-					_logger.trace("finished writing buffer");
+					log.trace("finished writing buffer");
 				}
 			}
 			catch (IOException ex_)
 			{
-				_logger.error(ex_.toString(), ex_);
+				log.error(ex_.toString(), ex_);
 				return false;
 			}
 

@@ -74,16 +74,16 @@ class StandardLatencyRecorderTest
 				latWrite.recordLatency(i);
 			}
 			long end = System.nanoTime();
-			_logger.warn("finished writing 1million latency points, total time:[{}] nanos", new DecimalFormat("#,###").format(end - start));
+			log.warn("finished writing 1million latency points, total time:[{}] nanos", new DecimalFormat("#,###").format(end - start));
 		}
 		catch (ConfigurationException ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 			fail(ex_.toString());
 		}
 		catch (Exception ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 			fail(ex_.toString());
 		}
 
@@ -91,7 +91,7 @@ class StandardLatencyRecorderTest
 
 
 
-		try (DataInputStream dis = new DataInputStream(new FileInputStream(props.getFname())))
+		try (DataInputStream dis = new DataInputStream(new FileInputStream(props.getFileName())))
 		{
 			int onMillionDesc = ONE_MILLION*100;
 			int lat, count = 0;
@@ -105,13 +105,13 @@ class StandardLatencyRecorderTest
 				}
 				if (++count % 100_000 == 0)
 				{
-					_logger.info("good for:{}", count);
+					log.info("good for:{}", count);
 				}
 			}
 		}
 		catch (Exception ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 			fail(ex_.toString());
 		}
 
@@ -119,13 +119,13 @@ class StandardLatencyRecorderTest
 
 		try
 		{
-			Path toDel = Paths.get(props.getFpath(), props.getFname());
-			_logger.warn("deleting:{}", toDel);
+			Path toDel = Paths.get(props.getFilePath(), props.getFileName());
+			log.warn("deleting:{}", toDel);
 			//Files.deleteIfExists(toDel);
 		}
 		catch (Exception ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 		}
 
 	}

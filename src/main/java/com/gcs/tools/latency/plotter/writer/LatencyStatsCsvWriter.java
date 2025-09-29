@@ -58,15 +58,15 @@ public class LatencyStatsCsvWriter implements ILatencyStatsWriter
 		try
 		{
 			_outfile = prepareFqnForOpen("csv", _appProps);
-			if (_logger.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				_logger.debug("opening {} for CSV write", _outfile.toString());
+				log.debug("opening {} for CSV write", _outfile.toString());
 			}
 			_csvFile = Files.newBufferedWriter(_outfile, StandardOpenOption.CREATE);
 		}
 		catch (IOException ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 			throw new RuntimeException(ex_);
 		}
 	}
@@ -111,25 +111,25 @@ public class LatencyStatsCsvWriter implements ILatencyStatsWriter
 		}
 		catch (IOException ex_)
 		{
-			_logger.error(ex_.toString(), ex_);
+			log.error(ex_.toString(), ex_);
 		}
 
 		if (expectedWriteSz != nCnt)
 		{
-			_logger.warn("Expected wrtie size and actual write size differ!, expected:{}, actual:{}, something bad has happened",
+			log.warn("Expected wrtie size and actual write size differ!, expected:{}, actual:{}, something bad has happened",
 					expectedWriteSz,
 					nCnt);
 		}
 		else
 		{
-			if (_logger.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				_logger.debug("total number of lines wrote in file:{}", nCnt);
+				log.debug("total number of lines wrote in file:{}", nCnt);
 			}
 
-			if (_logger.isTraceEnabled())
+			if (log.isTraceEnabled())
 			{
-				_logger.trace("exptected write[{}]=[{}] actual", expectedWriteSz, nCnt);
+				log.trace("exptected write[{}]=[{}] actual", expectedWriteSz, nCnt);
 			}
 		}
 
@@ -150,9 +150,9 @@ public class LatencyStatsCsvWriter implements ILatencyStatsWriter
 		}
 		_csvFile.flush();
 		_csvFile.close();
-		if (_logger.isInfoEnabled())
+		if (log.isInfoEnabled())
 		{
-			_logger.info("wrote file:{}", _outfile.toAbsolutePath());
+			log.info("wrote file:{}", _outfile.toAbsolutePath());
 		}
 	}
 

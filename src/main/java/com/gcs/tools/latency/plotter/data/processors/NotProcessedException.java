@@ -5,67 +5,68 @@
  * File: NotProcessedException.java
  */
 
-
-
-
-
-
-
 package com.gcs.tools.latency.plotter.data.processors;
 
+/**
+ * Exception thrown when a buffer has not been processed.
+ */
+public class NotProcessedException extends RuntimeException {
 
+    /**
+     * Serialization ID.
+     */
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
+    public NotProcessedException() {
+        super();
+    }
 
+    /**
+     * Constructor with message, cause, suppression, and stack trace options.
+     *
+     * @param message            Exception message
+     * @param cause              Exception cause
+     * @param enableSuppression  Whether suppression is enabled
+     * @param writableStackTrace Whether stack trace should be writable
+     */
+    public NotProcessedException(
+            String message,
+            Throwable cause,
+            boolean enableSuppression,
+            boolean writableStackTrace
+    ) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
-public class NotProcessedException extends RuntimeException
-{
+    /**
+     * Constructor with message and cause.
+     *
+     * @param message Exception message
+     * @param cause   Exception cause
+     */
+    public NotProcessedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Constructor with message only.
+     *
+     * @param message Exception message
+     */
+    public NotProcessedException(String message) {
+        super(message);
+    }
 
-	public NotProcessedException()
-	{
-		super();
-
-	}
-
-
-
-
-
-	public NotProcessedException(String message_, Throwable cause_, boolean enableSuppression_, boolean writableStackTrace_)
-	{
-		super(message_, cause_, enableSuppression_, writableStackTrace_);
-
-	}
-
-
-
-
-
-	public NotProcessedException(String message_, Throwable cause_)
-	{
-		super(message_, cause_);
-
-	}
-
-
-
-
-
-	public NotProcessedException(String message_)
-	{
-		super(message_);
-
-	}
-
-
-
-
-
-	public NotProcessedException(Throwable cause_)
-	{
-		super(cause_);
-
-	}
+    /**
+     * Constructor with cause only.
+     *
+     * @param cause Exception cause
+     */
+    public NotProcessedException(Throwable cause) {
+        super(cause);
+    }
 
 }
