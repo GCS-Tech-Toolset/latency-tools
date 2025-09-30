@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
@@ -104,7 +105,8 @@ class AffinitizedExecutorServiceTest {
     public void testSubmitAffinitizedTask_withThreadName() {
         String threadName = "custom-thread";
         int cpuAffinity = 2;
-        var fut = executorService.submitAffinitizedTask(threadName, runnableMock, cpuAffinity);
+        final var fut = executorService.submitAffinitizedTask(threadName, runnableMock, cpuAffinity);
+        assertNotNull(fut);
         assertEquals(1, executorService.getQueue().size());
     }
 
@@ -126,7 +128,8 @@ class AffinitizedExecutorServiceTest {
     @Test
     public void testSubmitMultipleAffinitizedTasks() {
         for (int i = 0; i < 5; i++) {
-            var exec = executorService.submitAffinitizedTask(runnableMock, i % 2);
+            final var exec = executorService.submitAffinitizedTask(runnableMock, i % 2);
+            assertNotNull(exec);
         }
         assertEquals(5, executorService.getQueue().size());
 
