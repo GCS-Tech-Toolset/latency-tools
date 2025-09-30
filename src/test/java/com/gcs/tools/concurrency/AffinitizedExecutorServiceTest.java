@@ -12,23 +12,26 @@ package com.gcs.tools.concurrency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
 
-@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 class AffinitizedExecutorServiceTest {
 
     @Mock
-    AffinitizedThreadFactory threadFactoryMock;
+    private AffinitizedThreadFactory threadFactoryMock;
 
     @Mock
-    Runnable runnableMock;
+    private Runnable runnableMock;
 
-    AffinitizedExecutorService executorService;
+    @InjectMocks
+    private AffinitizedExecutorService executorService;
 
 
 
@@ -36,7 +39,6 @@ class AffinitizedExecutorServiceTest {
 
     @BeforeEach
     public void setup() {
-        threadFactoryMock = new AffinitizedThreadFactory();
         executorService = new AffinitizedExecutorService(2, threadFactoryMock);
     }
 

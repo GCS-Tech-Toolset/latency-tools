@@ -1,38 +1,27 @@
 package com.gcs.tools.time.impl;
 
-
-
-
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+class SystemTimeProviderTest {
+
+    private final SystemTimeProvider timeProvider = new SystemTimeProvider();
 
 
 
 
 
-class SystemTimeProviderTest
-{
-
-
-
-
-
-    private SystemTimeProvider _systemTimeProvider;
-
-
-
-
-
-    @BeforeEach
-    public void setUp()
-    {
-        _systemTimeProvider = new SystemTimeProvider();
+    @Test
+    void testNowReturnsCurrentInstant() {
+        Instant before = Instant.now();
+        Instant result = timeProvider.now();
+        Instant after = Instant.now();
+        assertFalse(result.isBefore(before));
+        assertFalse(result.isAfter(after));
     }
 
 
@@ -40,10 +29,11 @@ class SystemTimeProviderTest
 
 
     @Test
-    void now()
-    {
-        Instant now = _systemTimeProvider.now();
-        assertNotNull(now);
+    void testCurrentTimeMillisIsCloseToSystemMillis() {
+        long before = System.currentTimeMillis();
+        long result = timeProvider.currentTimeMillis();
+        long after = System.currentTimeMillis();
+        assertTrue(result >= before && result <= after);
     }
 
 
@@ -51,10 +41,11 @@ class SystemTimeProviderTest
 
 
     @Test
-    void currentTimeMillis()
-    {
-        long currentTimeMillis = _systemTimeProvider.currentTimeMillis();
-        assertTrue(currentTimeMillis > 0);
+    void testNanoTimeIsCloseToSystemNanoTime() {
+        long before = System.nanoTime();
+        long result = timeProvider.nanoTime();
+        long after = System.nanoTime();
+        assertTrue(result >= before && result <= after);
     }
 
 
@@ -62,10 +53,10 @@ class SystemTimeProviderTest
 
 
     @Test
-    void nanoTime()
-    {
-        long nanoTime = _systemTimeProvider.nanoTime();
-        assertTrue(nanoTime > 0);
+    void testCurrentTimeMicrosIsMillisTimesThousand() {
+        long millis = timeProvider.currentTimeMillis();
+        long micros = timeProvider.currentTimeMicros();
+        assertEquals(millis * 1000, micros);
     }
 
 
@@ -73,10 +64,12 @@ class SystemTimeProviderTest
 
 
     @Test
-    void currentTimeMicros()
-    {
-        long currentTimeMicros = _systemTimeProvider.currentTimeMicros();
-        assertTrue(currentTimeMicros > 0);
+    void testCurrentTimeNanosIsEpochNanos() {
+        Instant now = Instant.now();
+        long expected = now.getEpochSecond() * 1_000_000_000L + now.getNano();
+        long actual = timeProvider.currentTimeNanos();
+        // Allow a small delta due to time passing between calls
+        assertTrue(Math.abs(expected - actual) < 2_000_000); // within 2ms
     }
 
 
@@ -84,22 +77,9 @@ class SystemTimeProviderTest
 
 
     @Test
-    void currentTimeNanos()
-    {
-        long currentTimeNanos = _systemTimeProvider.currentTimeNanos();
-        assertTrue(currentTimeNanos > 0);
+    void testCurrentTimeSecondsIsEpochSeconds() {
+        long expected = Instant.now().getEpochSecond();
+        long actual = timeProvider.currentTimeSeconds();
+        assertTrue(Math.abs(expected - actual) <= 1); // within 1 second
     }
-
-
-
-
-
-    @Test
-    void currentTimeSeconds()
-    {
-        long currentTimeSeconds = _systemTimeProvider.currentTimeSeconds();
-        assertTrue(currentTimeSeconds > 0);
-    }
-
-
 }

@@ -1,26 +1,25 @@
 package com.gcs.tools.time.impl;
 
-
-
-
-
+import com.gcs.tools.time.TimeProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class SystemChronometerTest {
+
+    private TimeProvider mockTimeProvider;
+    private SystemChronometer chronometer;
 
 
 
 
 
-class SystemChronometerTest
-{
-    @Test
-    void testStart()
-    {
-        SystemChronometer systemChronometer = new SystemChronometer(new SystemTimeProvider());
-        long start = systemChronometer.start();
-        assertTrue(start > 0);
+    @BeforeEach
+    void setUp() {
+        mockTimeProvider = Mockito.mock(TimeProvider.class);
+        chronometer = new SystemChronometer(mockTimeProvider);
     }
 
 
@@ -28,12 +27,10 @@ class SystemChronometerTest
 
 
     @Test
-    void testStop()
-    {
-        SystemChronometer systemChronometer = new SystemChronometer(new SystemTimeProvider());
-        long start = systemChronometer.start();
-        int stop = systemChronometer.stop();
-        assertTrue(stop > 0);
+    void testStartRecordsCurrentNanoTime() {
+        Mockito.when(mockTimeProvider.nanoTime()).thenReturn(123456789L);
+        long result = chronometer.start();
+        assertEquals(123456789L, result);
     }
 
 
@@ -41,12 +38,11 @@ class SystemChronometerTest
 
 
     @Test
-    void testStopWithStart()
-    {
-        SystemChronometer systemChronometer = new SystemChronometer(new SystemTimeProvider());
-        long start = systemChronometer.start();
-        int stop = systemChronometer.stop();
-        assertTrue(stop > 0);
+    void testStopReturnsElapsedTime() {
+        Mockito.when(mockTimeProvider.nanoTime()).thenReturn(100L, 200L);
+        chronometer.start();
+        int elapsed = chronometer.stop();
+        assertEquals(100, elapsed);
     }
 
 
@@ -54,10 +50,9 @@ class SystemChronometerTest
 
 
     @Test
-    void testStopWithoutStart()
-    {
-        SystemChronometer systemChronometer = new SystemChronometer(new SystemTimeProvider());
-        assertThrows(IllegalStateException.class, () -> systemChronometer.stop());
+    void testStopThrowsIfNotStarted() {
+        Exception exception = assertThrows(IllegalStateException.class, () -> chronometer.stop());
+        assertEquals("Chronometer not started", exception.getMessage());
     }
 
 
@@ -65,13 +60,11 @@ class SystemChronometerTest
 
 
     @Test
-    void testReset()
-    {
-        SystemChronometer systemChronometer = new SystemChronometer(new SystemTimeProvider());
-        long start = systemChronometer.start();
-        systemChronometer.reset();
-        assertThrows(IllegalStateException.class, () -> systemChronometer.stop());
+    void testResetSetsMarkToZero() {
+        Mockito.when(mockTimeProvider.nanoTime()).thenReturn(100L);
+        chronometer.start();
+        chronometer.reset();
+        Exception exception = assertThrows(IllegalStateException.class, () -> chronometer.stop());
+        assertEquals("Chronometer not started", exception.getMessage());
     }
-
-
 }

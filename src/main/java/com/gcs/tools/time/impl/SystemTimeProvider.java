@@ -1,23 +1,18 @@
 package com.gcs.tools.time.impl;
 
 
-
-
-
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 
 
-
-
-
 @RequiredArgsConstructor
-public class SystemTimeProvider implements com.gcs.tools.time.TimeProvider
-{
+public class SystemTimeProvider implements com.gcs.tools.time.TimeProvider {
+    /**
+     * Returns the current Instant from the system clock.
+     */
     @Override
-    public Instant now()
-    {
+    public Instant now() {
         return Instant.now();
     }
 
@@ -25,9 +20,11 @@ public class SystemTimeProvider implements com.gcs.tools.time.TimeProvider
 
 
 
+    /**
+     * Returns the current time in milliseconds since epoch.
+     */
     @Override
-    public long currentTimeMillis()
-    {
+    public long currentTimeMillis() {
         return System.currentTimeMillis();
     }
 
@@ -35,9 +32,11 @@ public class SystemTimeProvider implements com.gcs.tools.time.TimeProvider
 
 
 
+    /**
+     * Returns the current value of the system's high-resolution time source, in nanoseconds.
+     */
     @Override
-    public long nanoTime()
-    {
+    public long nanoTime() {
         return System.nanoTime();
     }
 
@@ -45,29 +44,39 @@ public class SystemTimeProvider implements com.gcs.tools.time.TimeProvider
 
 
 
+    /**
+     * Returns the current time in microseconds since epoch.
+     */
     @Override
-    public long currentTimeMicros()
-    {
-        return System.nanoTime() / 1000;
+    public long currentTimeMicros() {
+        return currentTimeMillis() * 1000;
     }
 
 
 
 
 
+    /**
+     * Returns the current time in nanoseconds since epoch.
+     * Combines seconds since epoch and nanoseconds within the current second.
+     * <p>
+     * This is the closest to a true epoch nanosecond time we can get in Java.
+     */
     @Override
-    public long currentTimeNanos()
-    {
-        return System.nanoTime();
+    public long currentTimeNanos() {
+        final var now = Instant.now();
+        return now.getEpochSecond() * 1_000_000_000L + now.getNano();
     }
 
 
 
 
 
+    /**
+     * Returns the current time in seconds since epoch.
+     */
     @Override
-    public long currentTimeSeconds()
-    {
-        return System.currentTimeMillis() / 1000;
+    public long currentTimeSeconds() {
+        return Instant.now().getEpochSecond();
     }
 }
