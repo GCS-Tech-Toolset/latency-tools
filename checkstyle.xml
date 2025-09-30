@@ -42,6 +42,23 @@
             <property name="separated" value="true"/>
             <property name="option" value="top"/>
         </module>
+        <!-- Enforce at least one blank line between methods. Checkstyle does not support enforcing exactly 5 blank lines. -->
+        <module name="RegexpMultiline">
+            <property name="format"
+                      value="^\s*\n\s*\n\s*\n\s*\n\s*\n\s*@(Override)?\s*(public|protected|private)\s+[\w&lt;&gt;\[\]]+\s+\w+\s*\(.*\)\s*\{"/>
+            <property name="message" value="Expected 5 blank lines before method definition"/>
+            <property name="illegalPattern" value="false"/>
+        </module>
+
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="^\s*/\*"/>
+            <property name="message" value="Use inline // comments for fields, block comments are not allowed"/>
+            <property name="ignoreComments" value="false"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+
+        <!-- NOTE: To enforce exactly 5 blank lines between methods, a custom Checkstyle module or third-party plugin is required. -->
     </module>
 
     <module name="LineLength">

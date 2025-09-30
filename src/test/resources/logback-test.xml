@@ -1,4 +1,4 @@
-<configuration debug="true" scanPeriod="30 seconds">
+<configuration debug="false" scanPeriod="30 seconds">
 	<conversionRule conversionWord="color" converterClass="com.gcs.utils.logging.LogbackColorConsole" />
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<withJansi>false</withJansi>

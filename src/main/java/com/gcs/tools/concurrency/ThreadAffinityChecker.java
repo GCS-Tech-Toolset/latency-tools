@@ -1,9 +1,6 @@
 package com.gcs.tools.concurrency;
 
-
-
-
-
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -17,29 +14,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-
-
-
+@Data
 @Slf4j
-public class ThreadAffinityChecker
-{
+public class ThreadAffinityChecker {
 
-
-
-    public static class CommandNotFoundException extends Exception
-    {
-        public CommandNotFoundException(String message)
-        {
-            super(message);
-        }
-    }
+    // the actual runner implementation
+    private static CommandRunner commandRunner = new DefaultCommandRunner();
 
 
 
 
 
-    public static void main(String[] args)
-    {
+    /**
+     * Entry point for the thread affinity checker utility.
+     *
+     * @param args Command line arguments
+     */
+    public static void main(final String[] args) {
+
+        // Define CLI options
         Options options = new Options();
         options.addOption("h", "help", false, "Display help");
         options.addOption("p", "pid", true, "Process ID to check threads for");
@@ -49,51 +42,45 @@ public class ThreadAffinityChecker
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
-        try
-        {
-            CommandLine cmd = parser.parse(options, args);
+        try {
+            CommandLine cmdLine = parser.parse(options, args);
 
-            if (cmd.hasOption("h"))
-            {
+            // Show help if requested
+            if (cmdLine.hasOption("h")) {
                 formatter.printHelp("ThreadAffinityViaCommand", options);
                 return;
             }
 
-            // Ensure necessary commands are available
+            // Ensure required system commands are available
             ensureCommandAvailable("ps");
             ensureCommandAvailable("taskset");
 
-            if (cmd.hasOption("d"))
-            {
+            // Show default affinity if requested
+            if (cmdLine.hasOption("d")) {
                 showDefaultAffinity();
                 return;
             }
 
-
-            if (cmd.hasOption("p"))
-            {
-                String pid = cmd.getOptionValue("p");
-                listThreadAffinities(pid);
+            // Query by PID
+            if (cmdLine.hasOption("p")) {
+                String processId = cmdLine.getOptionValue("p");
+                listThreadAffinities(processId);
                 showDefaultAffinity();
             }
-            else if (cmd.hasOption("n"))
-            {
-                String processName = cmd.getOptionValue("n");
+            // Query by process name
+            else if (cmdLine.hasOption("n")) {
+                String processName = cmdLine.getOptionValue("n");
                 findProcessByName(processName);
             }
-            else
-            {
+            // No valid option provided
+            else {
                 log.error("No valid option provided. Use -h for help.");
             }
-        }
-        catch (ParseException e)
-        {
-            log.error("Failed to parse command line options", e);
+        } catch (ParseException parseEx) {
+            log.error("Failed to parse command line options", parseEx);
             formatter.printHelp("ThreadAffinityViaCommand", options);
-        }
-        catch (Exception e)
-        {
-            log.error("Error executing the program", e);
+        } catch (Exception ex) {
+            log.error("Error executing the program", ex);
         }
     }
 
@@ -101,21 +88,36 @@ public class ThreadAffinityChecker
 
 
 
-    private static void ensureCommandAvailable(String command) throws IOException, CommandNotFoundException
-    {
-        Process process = Runtime.getRuntime().exec("which " + command);
-        try
-        {
-            int exitValue = process.waitFor();
-            if (exitValue != 0)
-            {
-                throw new CommandNotFoundException("Command not found: " + command);
+    /**
+     * Ensures a system command is available in the environment.
+     * Logs command execution and errors, uses descriptive variable names, and ensures resources are closed.
+     *
+     * @param commandName Name of the command to check
+     * @throws IOException              If an I/O error occurs
+     * @throws CommandNotFoundException If the command is not found
+     */
+    public static void ensureCommandAvailable(final String commandName) throws IOException, CommandNotFoundException {
+        log.debug("Checking availability of command: {}", commandName);
+
+        Process whichProcess = commandRunner.exec("which " + commandName);
+        try {
+            final int whichExitCode = whichProcess.waitFor();
+            if (whichExitCode != 0) {
+                log.error("Command not found: {} (exit code: {})", commandName, whichExitCode);
+                throw new CommandNotFoundException("Command not found: " + commandName);
             }
-        }
-        catch (InterruptedException e)
-        {
+
+            // Optionally log the resolved path
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(whichProcess.getInputStream()))) {
+                String resolvedPath = reader.readLine();
+                if (resolvedPath != null && !resolvedPath.isEmpty()) {
+                    log.debug("Command '{}' resolved to: {}", commandName, resolvedPath);
+                }
+            }
+        } catch (InterruptedException interruptedEx) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Command check interrupted", e);
+            log.error("Command check interrupted for: {}", commandName, interruptedEx);
+            throw new RuntimeException("Command check interrupted", interruptedEx);
         }
     }
 
@@ -123,30 +125,41 @@ public class ThreadAffinityChecker
 
 
 
-    private static void listThreadAffinities(String pid) throws IOException
-    {
-        Process psProcess = Runtime.getRuntime().exec("ps -mo pid,tid,%cpu,psr,comm -p " + pid);
-        printCommandOutput(psProcess, "Threads and their affinities for PID " + pid + ":");
+    /**
+     * Lists thread affinities for a given process ID.
+     *
+     * @param processId Process ID to query
+     * @throws IOException If an I/O error occurs
+     */
+    public static void listThreadAffinities(final String processId) throws IOException {
+        Process psProcess = commandRunner.exec("ps -mo pid,tid,%cpu,psr,comm -p " + processId);
+        printCommandOutput(psProcess, "Threads and their affinities for PID " + processId + ":");
     }
 
 
 
 
 
-    private static void findProcessByName(String processName) throws IOException
-    {
-        Process psProcess = Runtime.getRuntime().exec("ps aux | grep " + processName);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(psProcess.getInputStream())))
-        {
+    /**
+     * Finds processes by name and prints their details.
+     * Exits if multiple processes are found.
+     *
+     * @param processName Name of the process to search for
+     * @throws IOException If an I/O error occurs
+     */
+    public static void findProcessByName(final String processName) throws IOException {
+        Process psProcess = commandRunner.exec("ps aux | grep " + processName);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(psProcess.getInputStream()))) {
+
             String line;
-            int count = 0;
-            while ((line = reader.readLine()) != null)
-            {
+            int processCount = 0;
+
+            while ((line = reader.readLine()) != null) {
                 log.info(line);
-                count++;
+                processCount++;
             }
-            if (count > 1)
-            {
+
+            if (processCount > 1) {
                 log.error("Multiple processes found, please specify a more unique identifier");
                 System.exit(1);
             }
@@ -157,9 +170,13 @@ public class ThreadAffinityChecker
 
 
 
-    private static void showDefaultAffinity() throws IOException
-    {
-        Process tasksetProcess = Runtime.getRuntime().exec("taskset -p 1");
+    /**
+     * Shows the default system affinity using taskset.
+     *
+     * @throws IOException If an I/O error occurs
+     */
+    public static void showDefaultAffinity() throws IOException {
+        Process tasksetProcess = commandRunner.exec("taskset -p 1");
         printCommandOutput(tasksetProcess, "Default system affinity:");
     }
 
@@ -167,14 +184,20 @@ public class ThreadAffinityChecker
 
 
 
-    private static void printCommandOutput(Process process, String header) throws IOException
-    {
+    /**
+     * Prints the output of a system command with a header.
+     *
+     * @param process Process whose output to print
+     * @param header  Header message to display
+     * @throws IOException If an I/O error occurs
+     */
+    public static void printCommandOutput(final Process process, final String header) throws IOException {
         log.info(header);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())))
-        {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+
             String line;
-            while ((line = reader.readLine()) != null)
-            {
+
+            while ((line = reader.readLine()) != null) {
                 log.info(line);
             }
         }
